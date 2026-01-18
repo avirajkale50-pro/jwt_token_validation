@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Authentication System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Generator Section -->
+        <div class="card">
+            <h2>Generate JWT</h2>
+            <form action="/generate_ui" method="get">
+                <div>
+                    <label for="user_id">User ID</label>
+                    <input type="text" id="user_id" name="user_id" placeholder="e.g. user_123"
+                        value="{{ user_id if user_id else '' }}" required>
+                </div>
+                <button type="submit">Generate Token</button>
+            </form>
+
+            {% if generated_token %}
+            <div class="result-box">
+                <div class="result-label">Generated Token</div>
+                <div class="token-display">{{ generated_token }}</div>
+                <div style="margin-top: 10px; font-size: 0.8rem; color: #94a3b8;">
+                    Token copied to clipboard automatically (simulated) or copy it manually to test validation.
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Validator Section -->
+        <div class="card">
+            <h2>Validate JWT</h2>
+            <form action="/validate_ui" method="get">
+                <div>
+                    <label for="token">JWT Token</label>
+                    <textarea id="token" name="token"
+                        placeholder="Paste your token here...">{{ Token if Token else '' }}</textarea>
+                </div>
+                <button type="submit">Validate Token</button>
+            </form>
+
+            {% if validation_result %}
+            <div class="result-box {{ 'valid' if validation_result == 'Valid' else 'invalid' }}">
+                <div class="result-label">Status: {{ validation_result }}</div>
+
+                {% if validation_result == 'Valid' %}
+                <div class="claims-display">
+                    <strong>Payload Claims:</strong>
+                    <pre style="margin-top: 5px; color: #cbd5e1;">{{ claims }}</pre>
+                </div>
+                {% else %}
+                <div class="claims-display" style="color: var(--error-color);">
+                    Reason: {{ validation_error }}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>
